@@ -1,0 +1,29 @@
+---
+title: "FlexR"
+author: "Sean Kiah, Yunshu Qiu, Letacianna Stoudmire"
+date: "2023-11-17"
+output: html_document
+---
+## Introduction
+
+## Methods
+
+## Results
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Discussion
+
+
+## Author Contributions
+Sean:
+Letacianna:
+Yunshu:
+
+## References
+
+
+
+
