@@ -40,6 +40,26 @@ mutate(who = who, angle = ang, activity = activity)
 
 dat <- do.call(rbind,dat.l)
 print(dat)
+
+dat_recording_max<-dat%>%
+  group_by(who,angle,activity)%>%
+  summarize(recording_max=max(abs(force)))%>%
+  print()
+
+dat_Fmax<-dat_recording_max%>%
+  group_by(who,activity)%>%
+  summarize(Fmax=max(recording_max))%>%
+  print()
+
+dat_Fmax_norm<-dat_recording_max%>%
+    left_join(dat_Fmax)
+dat_Fmax_norm<-dat_Fmax_norm%>%
+  group_by(angle,who,experiment)%>%
+  summarize(Fmax_norm=(recording_max/Fmax))%>%
+  print()
+```
+```{r, echo= FALSE}
+
 ```
 
 ## Discussion
