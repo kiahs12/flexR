@@ -59,7 +59,21 @@ dat_Fmax_norm<-dat_Fmax_norm%>%
   print()
 ```
 ```{r, echo= FALSE}
+dat_Fmax_norm%>% #plot one, name later, normalized Fmax vs Angle
+  ggplot(aes(x=angle,y=Fmax_norm,col=activity))+geom_point()
 
+dat_Fmax_norm_mean<-dat_Fmax_norm%>%
+  group_by(angle,activity)%>%
+  summarize(Fmax_norm_mean=mean(Fmax_norm))
+
+dat_Fmax_norm_mean%>% #plot two, name later, mean normalized Fmax vs Angle
+  ggplot(aes(x=angle,y=Fmax_norm_mean,col=activity))+geom_point()+labs(y="Mean Normalized Fmax", x="Angle")
+```
+```{r, echo= FALSE}
+poly.m2 <- lm(Fmax_norm~poly(angle,2),data=dat_Fmax_norm) 
+poly.m3 <- lm(Fmax_norm~poly(angle,3),data=dat_Fmax_norm) 
+poly.m4 <- lm(Fmax_norm~poly(angle,4),data=dat_Fmax_norm) 
+AICc(poly.m2,poly.m3,poly.m4)
 ```
 
 ## Discussion
