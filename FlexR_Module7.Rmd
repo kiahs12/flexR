@@ -3,15 +3,49 @@ title: "FlexR"
 author: "Sean Kiah, Yunshu Qiu, Letacianna Stoudmire"
 date: "2023-11-17"
 output: html_document
+bibliography: BIOL3140.bib
 ---
 ## Introduction
-
+Muscle force is a result of two important factors, the length of contraction and the speed of contraction. The force-length relationship governs that muscles generate the most amount of force when at their resting length and generate the least amount of force when they are shortened or elongated from their ideal resting length. This is a result of the cross-bridge theory and where each individual sarcomere has a limited attachment zone between actin and myosin. When muscles have increased and decreased length from their resting position, the amount of actin and myosin overlap is less resulting in decreased productions of force @rassier1999length. This project seeks to answer whether this typical force-length relationship is observed both under control and when the muscle is fatigued. It also seeks to answer whether there is a shift in the angle of the elbow joint at which the maximum voluntary contraction occurs under control and fatigued conditions. Previous studies have shown that fatigued muscles favor longer lengths for force generation over control muscles. Data was collected and analyzed to further test and answer these questions @biewener2006tired.
 ## Methods
 
 ## Results
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(MuMIn)
+library(ggplot2)
+library(knitr)
+library(dplyr)
+```
+```{r}
+subdirs<- list.dirs(path= ".", full.names=FALSE, recursive=FALSE)
+combined_data<-tibble()
+for(subdir in subdirs) {
+  parts<-str_match(subdir, "^(.+) \\((Control|Fatigue)\\)$")
+  name<- parts[,2]
+  state<- parts [,3]
+  
+  file_paths<- list.files(path = subdir, pattern = "\\.csv$",
+                          full.names=TRUE)
+  for(file_path in file_paths) {
+    angle<-str_extract(basename(file_path), "_([0-9]+\\.[0-9]+)")
+                       %>% parse_number()
+                      data<-read_csv(file_path, col_names = FALSE, show_col_types = FALSE)
+                      data<-data%>%
+                        rename(Measurement = 1) %>%
+                        mutate(across(everything(), abs))
+                      data <- data %>%
+                        mutate(
+                          Name=name,
+                          State=state,
+                          Angle=angle
+                        )
+                      combined_data <- bind_rows(combined_data, data)
+                        
+  }
+}
 ```
 
 ## Discussion
