@@ -25,22 +25,21 @@ library(knitr)
 library(dplyr)
 ```
 ```{r, echo=FALSE}
-f <- list.files("new_data",pattern=".csv",full.names = TRUE)
-dat.l <- list() #empty list
+f <- list.files("new_data", pattern = ".csv", full.names=TRUE)
+
+dat.l <- list()
 
 for(i in f){
-  met.dat<- unlist(strsplit(i,"_"))
-  group <- gsub("new_data/", " ", met.dat[1])
-  subject <- met.dat[2]
-  ang <- as.numeric(met.dat[3])
-  activity <- gsub(".csv","",met.dat[4])
-  
-  dat.l[[i]]<- read_delim(i, delim= " ", col_names = c("Reading","Force","Unit"))%>%
-    mutate(Group=group,Subject=subject, Angle=ang, Activity = activity)
-  
+met.dat<- unlist(strsplit(i,"_"))
+who <- met.dat[3]
+activity <- met.dat[4]
+ang <- gsub(".csv","", met.dat[5])
+dat.l[[i]]<- read_csv(i) %>%
+mutate(who = who, angle = ang, activity = activity)
 }
-data <- do.call(rbind,dat.l)
 
+dat <- do.call(rbind,dat.l)
+print(dat)
 ```
 
 ## Discussion
