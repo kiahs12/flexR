@@ -54,7 +54,7 @@ dat_Fmax<-dat_recording_max%>%
 dat_Fmax_norm<-dat_recording_max%>%
     left_join(dat_Fmax)
 dat_Fmax_norm<-dat_Fmax_norm%>%
-  group_by(angle,who,experiment)%>%
+  group_by(angle,who,activity)%>%
   summarize(Fmax_norm=(recording_max/Fmax))%>%
   print()
 ```
