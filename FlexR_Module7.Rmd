@@ -26,75 +26,64 @@ library(dplyr)
 ```
 
 ```{r, echo=FALSE}
-f <- list.files("new_data2", pattern = ".csv", full.names=TRUE)
+f <- list.files("new_data", pattern = ".csv", full.names=TRUE)
 dat.l <- list()
 
 for(i in f){
   met.dat<- unlist(strsplit(i,"_"))
   who <- met.dat[3]
   activity <- met.dat[4]
-  ang <- gsub(".csv","", met.dat[5])
-  dat.l[[i]]<- read_csv(i,show_col_types = FALSE) %>%
+  ang <- as.numeric(gsub(".csv","", met.dat[5]))
+  dat.l[[i]]<- read_csv(i) %>%
   mutate(who = who, angle = ang, activity = activity)
 }
 
 dat <- do.call(rbind,dat.l)
 print(dat)
 
-dat_recording_max<-dat%>%
-  group_by(who,angle,activity)%>%
-  summarize(recording_max=max(abs(force)))%>%
+filtered_data<-dat%>%
+filter(!(who=="letiacianna" | who=="leticianna" & activity %in% c("fatigue","control")))%>%
+  group_by(activity)%>%
+  mutate(normF=abs(force/max(force))) %>%
   print()
 
-dat_Fmax<-dat_recording_max%>%
-  group_by(who,activity)%>%
-  summarize(Fmax=max(recording_max))%>%
-  print()
-
-dat_Fmax_norm<-dat_recording_max%>%
-    left_join(dat_Fmax)
-
-dat_Fmax_norm<-dat_Fmax_norm%>%
-  group_by(angle,who,activity)%>%
-  summarize(Fmax_norm=(recording_max/Fmax))%>%
-  print()
 ```
 ```{r, echo= FALSE}
-dat_Fmax_norm%>% #plot one, name later, normalized Fmax vs Angle
-  ggplot(aes(x=angle,y=Fmax_norm,col=activity))+geom_point()
+filtered_data%>% #plot one, name later, normalized Fmax vs Angle
+  ggplot(aes(x=angle,y=normF,col=activity))+geom_point()
 
-dat_Fmax_norm_mean<-dat_Fmax_norm%>%
+dat_Fmax_norm_mean<-filtered_data%>%
   group_by(angle,activity)%>%
-  summarize(Fmax_norm_mean=mean(Fmax_norm))
+  summarize(Fmax_norm_mean=mean(normF))
 
 dat_Fmax_norm_mean%>% #plot two, name later, mean normalized Fmax vs Angle
   ggplot(aes(x=angle,y=Fmax_norm_mean,col=activity))+geom_point()+labs(y="Mean Normalized Fmax", x="Angle")
 ```
 ```{r, echo= FALSE}
-class(dat_Fmax_norm$angle)
-poly.m2 <- lm(Fmax_norm~poly(as.numeric(angle),2),data=dat_Fmax_norm) 
-poly.m3 <- lm(Fmax_norm~poly(as.numeric(angle),3),data=dat_Fmax_norm) 
-poly.m4 <- lm(Fmax_norm~poly(as.numeric(angle),4),data=dat_Fmax_norm) 
-AICc(poly.m2,poly.m3,poly.m4)
-AICs <- dat_Fmax_norm%>%
+AICs <- filtered_data %>%
   group_by(who,activity)%>%
   summarize(
-    m2=AICc(lm(Fmax_norm~poly(angle,2))), #second order
-    m3=AICc(lm(Fmax_norm~poly(angle,3))), #third order
-    m4=AICc(lm(Fmax_norm~poly(angle,4))) #fourth order
+    m2=AICc(lm(normF~poly(angle,2))),
+    m3=AICc(lm(normF~poly(angle,3))),
+    m4=AICc(lm(normF~poly(angle,4)))
   )%>%
-  pivot_longer(m2:m4,names_to="model",values_to="AICc")%>%
+  pivot_longer(m2:m4, names_to="model", values_to="AICc")
+
+AICs %>%
+  kable(caption= "Table 1: AIC values for 2nd, 3rd, and 4th order models")%>%
   print()
 
+
+```
 ```{r, echo=FALSE}
 x.pred<-seq(45,157.5,length.out=1000)
 
-fits <- dat_Fmax_norm%>%
+fits <- filtered_data%>%
   group_by(who,activity)%>%
   summarize(
-    m2=predict(lm(Fmax_norm~poly(angle,2)),newdata=data.frame(angle=x.pred)), #second order
-    m3=predict(lm(Fmax_norm~poly(angle,3)),newdata=data.frame(angle=x.pred)), #third order
-    m4=predict(lm(Fmax_norm~poly(angle,4)),newdata=data.frame(angle=x.pred)) #fourth order
+    m2=predict(lm(normF~poly(angle,2)),newdata=data.frame(angle=x.pred)), 
+    m3=predict(lm(normF~poly(angle,3)),newdata=data.frame(angle=x.pred)), 
+    m4=predict(lm(normF~poly(angle,4)),newdata=data.frame(angle=x.pred)) 
   )%>%
   pivot_longer(m2:m4,names_to="model")%>%
   group_by(who,activity,model)%>%
@@ -103,19 +92,34 @@ fits <- dat_Fmax_norm%>%
 
 best.models<-fits%>%
   left_join(AICs)%>%
-  group_by(subject,experiment)%>%
+  group_by(who,activity)%>%
   mutate(best=AICc==min(AICc))%>%
   filter(best==TRUE)%>%
-  select(-best)%>%
+  dplyr::select(-best)%>%
+  print()
+best.models %>%
+  kable(caption= "Table 2: Best fitting model due to lowest AICc value and predicted theta max")
+
+anova(lm(theta_max~activity,best.models)) %>%
   print()
 
-anova_thetamax<-anova(lm(theta_max~activity,best.models))
-
-theta_max<-best.models%>%
-  pivot_wider(id_cols=subject,names_from = experiment,values_from=theta_max)%>%
+best.models%>%
+  pivot_wider(id_cols=who,names_from = activity,values_from=theta_max)%>%
   mutate(shift=fatigue-control)%>%
   ungroup()%>%
-  summarize(mean.shift=mean(shift,na.rm=TRUE),se.shift=sd(shift,na.rm=TRUE)/sqrt(length(shift)))
+  summarize(mean.shift=mean(shift,na.rm=TRUE),se.shift=sd(shift,na.rm=TRUE)/sqrt(length(shift))) %>%
+  kable(caption="Table 3: Mean shift in theta max")%>%
+  print()
+
+shift.p<-best.models %>%
+  pivot_wider(id_cols= who, names_from=activity, values_from=theta_max)%>%
+  mutate(shift=fatigue-control)
+
+shift.p_long<-shift.p %>%
+  pivot_longer(cols=c("control","fatigue"), names_to = "Condition")
+
+shift.p_long %>%
+  ggplot(aes(x=who, y=value, fill=Condition)) + geom_bar(stat="identity", position="dodge", width=0.5)+ scale_x_discrete(labels=NULL)+theme_classic()+coord_flip()+ylab("Theta max")+ggtitle("Figure 1: Theta max for each individual subject")
 ```
 
 ## Discussion
