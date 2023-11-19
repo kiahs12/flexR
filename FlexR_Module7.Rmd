@@ -123,12 +123,14 @@ shift.p_long %>%
 ```
 
 ## Discussion
+As mentioned in the introduction, we set out to determine whether or not a relationship would be observed between force and length under a controlled versus fatigued setting. Based on our results ...
 
+Our AICc test showed that the best fit for our data was model
 
 ## Author Contributions
-Sean: Introduction and methods
-Letacianna:
-Yunshu:
+Sean: Introduction and Methods and Results
+Letacianna: Results and Discussion
+Yunshu: Discussion
 
 ## References
 
