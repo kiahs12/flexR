@@ -25,8 +25,9 @@ library(knitr)
 library(dplyr)
 ```
 ```{r, echo=FALSE}
-f <- list.files("new_data", pattern = ".csv", full.names=TRUE)
-
+getwd()
+f <- list.files(pattern = ".csv")
+#f <- list.files(pattern = ".csv", full.names=TRUE)
 dat.l <- list()
 
 for(i in f){
