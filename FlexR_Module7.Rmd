@@ -125,7 +125,7 @@ shift.p_long %>%
 ## Discussion
 As mentioned in the introduction, we set out to determine whether or not a relationship would be observed between force and length under a controlled versus fatigued setting. Based on our results ... 
 
-Muscle fatigue can result in the reduction of force capacity, this decrease happens over time which figure 3 accurately reflects. Studies such as "Muscle Fatigue: Feneral Understanding and Treatment," help us attribute our results to common peripheral fatigue due to exertion (Wan et al.).
+Muscle fatigue can result in the reduction of force capacity, this decrease happens over time which figure 3 accurately reflects. Studies such as @wan2017muscle help us attribute our results to common peripheral fatigue due to exertion.
 
 Our AICc test showed that the best fit for our data was model..
 
@@ -136,6 +136,5 @@ Yunshu: Discussion
 
 ## References
 
-Wan, Jing-Jing, et al. “Muscle Fatigue: General Understanding and Treatment.” Experimental &amp; Molecular Medicine, U.S. National Library of Medicine, 6 Oct. 2017, www.ncbi.nlm.nih.gov/pmc/articles/PMC5668469/#:~:text=Muscle%20fatigue%20is%20defined%20as,in%20response%20to%20contractile%20activity.&amp;text=It%20can%20originate%20at%20different,distal%20to%20the%20neuromuscular%20junction. 
 
 
