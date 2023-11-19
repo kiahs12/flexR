@@ -123,11 +123,7 @@ shift.p_long %>%
 ```
 
 ## Discussion
-As mentioned in the introduction, we set out to determine whether or not a relationship would be observed between force and length under a controlled versus fatigued setting. Based on our results ... 
-
-Muscle fatigue can result in the reduction of force capacity, this decrease happens over time which figure 3 accurately reflects. Studies such as @wan2017muscle help us attribute our results to common peripheral fatigue due to exertion.
-
-Our AICc test showed that the best fit for our data was model four
+As mentioned in the introduction, we set out to determine whether or not a relationship would be observed between force and length under a controlled versus fatigued setting. Based on our results, we noticed that for the angle at which maximum voluntary contraction force for the fatigue group occurs consistently higher than that of the control group. Specifically, there is a significant shift of a mean of 14.77 degree between the control and fatigue with a p-value is 0.01981. In addition, as shown in figure 3, the theta max for the fatigue muscle group is almost always higher than the control group, supporting the results from the statistic test. Muscle fatigue can result in the reduction of force capacity, this decrease happens over time which figure 3 accurately reflects. Studies such as @wan2017muscle help us attribute our results to common peripheral fatigue due to exertion. Finally, our AICc test showed that the best fit for our data was model four since its AIC value is consistently lower than other models.
 
 ## Author Contributions
 Sean: Introduction and Methods and Results
