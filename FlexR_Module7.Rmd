@@ -12,7 +12,7 @@ Muscle force is a result of two important factors, the length of contraction and
 ## Methods
 
 To find the force-length relationship for both control and fatigued muscles, we first needed to discover how we will control the length of contractions for the arm muscles. To do this we constructed a goniometer out of cardboard to measure the angle of contractions (angle of the upper arm and forearm via the elbow joint). Larger angles would have a longer length and smaller angles would have a shorter length. We measured 11 angles from 157.5 degrees to 45 degrees in 11.25 degree increments. At each angle we would produce the maximum voluntary contraction for 30 seconds and measure the output using a 40 kilogram load cell with a HX711 amplifier and an Arduino microcontroller. For our fatigued data we would use a backpack filled with textbooks to eccentrically fatigue our forearm flexors. The bag was lowered using the study arm until it was fully extended in 3-4 second cycles and returned to the top using the non-study hand. These cycles were repeated for 4 minutes, and after a 2 minute break data was collected again using the same method as in the control data. 
-To analyze our data, we found the maximum voluntary contraction for all the angles of the experiments. This value is what we call Fmax. We then use this value to normalize all of our other values by dividing each maximum force for each angle by Fmax. We then plotted the control and fatigue data on the same graph show we could see the shift in Fmax as a result of fatiguing the forearm flexors. The best fitting model was determined by AICc values. This shift was then calculated by subtracting the two angles. An ANOVA test was used to see if it was significant. 
+To analyze our data, we found the maximum voluntary contraction for all the angles of the experiments. This value is what we call Fmax. We then use this value to normalize all of our other values by dividing each maximum force for each angle by Fmax. We then plotted the control and fatigue data on the same graph so we could see the shift in Fmax as a result of fatiguing the forearm flexors. The best fitting model was determined by AICc values. This shift was then calculated by subtracting the two angles. An ANOVA test was used to see if it was significant. 
 
 ## Results
 
@@ -49,15 +49,15 @@ filter(!(who=="letiacianna" | who=="leticianna" & activity %in% c("fatigue","con
 
 ```
 ```{r, echo= FALSE}
-filtered_data%>% #plot one, name later, normalized Fmax vs Angle
-  ggplot(aes(x=angle,y=normF,col=activity))+geom_point()
+filtered_data%>% 
+  ggplot(aes(x=angle,y=normF,col=activity))+geom_point()+ggtitle("Figure 1: Normalized Fmax vs Angle")
 
-dat_Fmax_norm_mean<-filtered_data%>%
+dat_norm_mean<-filtered_data%>%
   group_by(angle,activity)%>%
   summarize(Fmax_norm_mean=mean(normF))
 
-dat_Fmax_norm_mean%>% #plot two, name later, mean normalized Fmax vs Angle
-  ggplot(aes(x=angle,y=Fmax_norm_mean,col=activity))+geom_point()+labs(y="Mean Normalized Fmax", x="Angle")
+dat_norm_mean%>% 
+  ggplot(aes(x=angle,y=Fmax_norm_mean,col=activity))+geom_point()+labs(y="Mean Normalized Fmax", x="Angle")+ggtitle("Figure 2: Mean normalized Fmax vs Angle")
 ```
 ```{r, echo= FALSE}
 AICs <- filtered_data %>%
@@ -119,7 +119,7 @@ shift.p_long<-shift.p %>%
   pivot_longer(cols=c("control","fatigue"), names_to = "Condition")
 
 shift.p_long %>%
-  ggplot(aes(x=who, y=value, fill=Condition)) + geom_bar(stat="identity", position="dodge", width=0.5)+ scale_x_discrete(labels=NULL)+theme_classic()+coord_flip()+ylab("Theta max")+ggtitle("Figure 1: Theta max for each individual subject")
+  ggplot(aes(x=who, y=value, fill=Condition)) + geom_bar(stat="identity", position="dodge", width=0.5)+ scale_x_discrete(labels=NULL)+theme_classic()+coord_flip()+ylab("Theta max")+ggtitle("Figure 3: Theta max for each individual subject")
 ```
 
 ## Discussion
