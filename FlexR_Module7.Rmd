@@ -25,7 +25,7 @@ library(knitr)
 library(dplyr)
 ```
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 f <- list.files("new_data", pattern = ".csv", full.names=TRUE)
 dat.l <- list()
 
@@ -127,7 +127,7 @@ As mentioned in the introduction, we set out to determine whether or not a relat
 
 Muscle fatigue can result in the reduction of force capacity, this decrease happens over time which figure 3 accurately reflects. Studies such as @wan2017muscle help us attribute our results to common peripheral fatigue due to exertion.
 
-Our AICc test showed that the best fit for our data was model..
+Our AICc test showed that the best fit for our data was model four
 
 ## Author Contributions
 Sean: Introduction and Methods and Results
