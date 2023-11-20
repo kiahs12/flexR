@@ -16,7 +16,7 @@ To analyze our data, we found the maximum voluntary contraction for all the angl
 
 ## Results
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(MuMIn)
@@ -25,7 +25,7 @@ library(knitr)
 library(dplyr)
 ```
 
-```{r, include=FALSE}
+```{r, include=FALSE, message=FALSE}
 f <- list.files("new_data", pattern = ".csv", full.names=TRUE)
 dat.l <- list()
 
@@ -48,7 +48,7 @@ filter(!(who=="letiacianna" | who=="leticianna" & activity %in% c("fatigue","con
   print()
 
 ```
-```{r, echo= FALSE}
+```{r, echo= FALSE, message=FALSE}
 filtered_data%>% 
   ggplot(aes(x=angle,y=normF,col=activity))+geom_point()+ggtitle("Figure 1: Normalized Fmax vs Angle")
 
@@ -59,7 +59,7 @@ dat_norm_mean<-filtered_data%>%
 dat_norm_mean%>% 
   ggplot(aes(x=angle,y=Fmax_norm_mean,col=activity))+geom_point()+labs(y="Mean Normalized Fmax", x="Angle")+ggtitle("Figure 2: Mean normalized Fmax vs Angle")
 ```
-```{r, echo= FALSE}
+```{r, echo= FALSE, message=FALSE}
 AICs <- filtered_data %>%
   group_by(who,activity)%>%
   summarize(
@@ -75,7 +75,7 @@ AICs %>%
 
 
 ```
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 x.pred<-seq(45,157.5,length.out=1000)
 
 fits <- filtered_data%>%
